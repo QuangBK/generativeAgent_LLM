@@ -1,4 +1,4 @@
-# Generative Agents with Guidance Langchain, and local LLMs
+# Generative Agents with Guidance, Langchain, and local LLMs
 This is the implementation of paper ["Generative Agents: Interactive Simulacra of Human Behavior"](https://arxiv.org/pdf/2304.03442.pdf). This is based on the [Langchain implementation](https://python.langchain.com/en/latest/use_cases/agent_simulations/characters.html). We improve and add more features to make it like the original paper as much as possible.
 For more explaination, please check [my medium post](https://medium.com/@gartist/implement-generative-agent-with-local-llm-guidance-and-langchain-full-features-fa57655f3de1).
 
