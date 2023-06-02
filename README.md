@@ -1,16 +1,17 @@
 # Generative Agents with Guidance Langchain, and local LLMs
 This is the implementation of paper ["Generative Agents: Interactive Simulacra of Human Behavior"](https://arxiv.org/pdf/2304.03442.pdf). This is based on the [Langchain implementation](https://python.langchain.com/en/latest/use_cases/agent_simulations/characters.html). We improve and add more features to make it like the original paper as much as possible.
+For more explaination, please check [my medium post](https://medium.com/@gartist/implement-generative-agent-with-local-llm-guidance-and-langchain-full-features-fa57655f3de1).
 
 ### Supported Features:
-[x] Work with local LLM
-[x] Memory and Retrieval
-[x] Reflection
-[x] Planning (need to improve)
-[x] Reacting and re-planning
-[x] Dialogue generation (need to improve)
-[x] Agent summary
-[x] Interview
-[ ] Web UI (Gradio)
+- [x] Work with local LLM
+- [x] Memory and Retrieval
+- [x] Reflection
+- [x] Planning (need to improve)
+- [x] Reacting and re-planning
+- [x] Dialogue generation (need to improve)
+- [x] Agent summary
+- [x] Interview
+- [ ] Web UI (Gradio)
 
 # How to use
 ### Install
@@ -63,7 +64,7 @@ Summary: Sam can be described as a Ph.D student who is interested in computer sc
 ```python
 status = sam.update_status()
 ```
-![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
+![alt text](https://github.com/QuangBK/generativeAgent_LLM/blob/main/imgs/planning.png?raw=true)
 
 ### Reaction
 ```python
@@ -77,7 +78,7 @@ Reaction: Sam could put food in the dog's bowl and then call Max over to eat.
 Context: Sam has a dog named Max, and he is a Ph.D student majoring in CS. Sam's father is a doctor, and Sam lives with his friend Bob. Sam likes computers and is currently taking an AI course. Sam is tired because of playing games. Bob left the room and said hello to Sam. Sam woke up in the morning and saw that the dog bowl was empty.
 """    
 ```
-![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
+![alt text](https://github.com/QuangBK/generativeAgent_LLM/blob/main/imgs/reaction.png?raw=true)
 
 ### Dialogue generation
 ```python
