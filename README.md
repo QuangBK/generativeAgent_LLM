@@ -24,8 +24,7 @@ Python packages:
 The GPTQ-for-LLaMa I used is the oobabooga's fork. You can install it with [this command](https://github.com/oobabooga/text-generation-webui/blob/main/docs/GPTQ-models-(4-bit-mode).md#step-1-install-gptq-for-llama).
 
 ### Run
-Please check the notebook file. You should have a free SERPER API KEY and a LLM model to run this.
-I use the [wizard-mega-13B-GPTQ](https://huggingface.co/TheBloke/wizard-mega-13B-GPTQ) model. Feel free to try others.
+Please check the notebook file. I use the [wizard-mega-13B-GPTQ](https://huggingface.co/TheBloke/wizard-mega-13B-GPTQ) model. Feel free to try others.
 
 # Notebook
 ### Define Generative Agent
