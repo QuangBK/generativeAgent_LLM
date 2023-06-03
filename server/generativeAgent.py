@@ -261,7 +261,7 @@ class GenerativeAgent:
         list_task.insert(0, {'from': now, 'to': result['to'], 'task': result['task']})
         return list_task
         
-    def intereview(self, user, question):
+    def interview(self, user, question):
         context = self._get_relevant_context(user, question)
         prompt = self.guidance(PROMPT_INTERVIEW, silent=self.silent)
         result = prompt(summary=self.summary,
