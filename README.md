@@ -102,7 +102,7 @@ Sam: No problem. Let me know when you're ready and I'll head over.
 
 ### Interview
 ```python
-response = sam.intereview('Friend', 'Who do you live with?')
+response = sam.interview('Friend', 'Who do you live with?')
 print(response)
 """
 I live with a friend of mine, his name is Bob.
