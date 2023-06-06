@@ -44,20 +44,23 @@ def merge_docs(docs1, docs2):
 # Based on 
 # https://github.com/hwchase17/langchain/blob/master/langchain/experimental/generative_agents/generative_agent.py
 class GenerativeAgent:
-    def __init__(self, guidance, name, age, des, trails, embeddings_model):
+    def __init__(self, guidance, name, age, des, trails, embeddings_model, current_time=None):
         self.guidance = guidance
         self.name = name
         self.age = str(age)
         self.des = des.split(';')
         self.summary = trails
         self.plan = []
-        self.status = None
-        self.current_time = None
+        self.status = None        
         embedding_size = 384
         index = faiss.IndexFlatL2(embedding_size)
         vectorstore = FAISS(embeddings_model.embed_query, index, InMemoryDocstore({}), {}, relevance_score_fn=score_normalizer)
         self.retriever = TimeWeightedVectorStoreRetrieverModified(vectorstore=vectorstore, other_score_keys=["importance"], k=10, decay_rate=0.01)
-        self.last_refreshed = datetime.now()
+        self.current_time = current_time
+        if self.current_time is None:
+            self.last_refreshed = datetime.now()
+        else:
+            self.last_refreshed = current_time
         self.summary_refresh_seconds = 3600
         self.aggregate_importance = 0
         self.reflecting = False
@@ -102,7 +105,7 @@ class GenerativeAgent:
             result = prompt(mem=mem_des)
             # importance_score_temp = int(result['rate'])*self.importance_weight
             importance_score_temp = int(result['rate'])
-            self.retriever.add_documents([Document(page_content=mem_des, metadata={"importance": importance_score_temp, "created_at": mem_time})])
+            self.retriever.add_documents([Document(page_content=mem_des, metadata={"importance": importance_score_temp, "created_at": mem_time})], current_time=mem_time)
             self.aggregate_importance += int(result['rate'])
 
         if not self.reflecting and self.aggregate_importance > self.reflection_threshold:
@@ -262,7 +265,10 @@ class GenerativeAgent:
         return list_task
         
     def interview(self, user, question):
-        context = self._get_relevant_context(user, question)
+        # context = self._get_relevant_context(user, question)
+        docs = self.retriever.get_relevant_documents(question, self.get_current_time())      
+        context = get_text_from_docs(docs, include_time = False)
+        
         prompt = self.guidance(PROMPT_INTERVIEW, silent=self.silent)
         result = prompt(summary=self.summary,
                         name=self.name,

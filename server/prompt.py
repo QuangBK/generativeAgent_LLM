@@ -154,7 +154,8 @@ PROMPT_INTERVIEW = """### Instruction:
 It is {{current_time}}.
 {{name}}'s status:{{status}}
 
-Summary of relevant context from {{name}}'s memory: {{context}}
+Summary of relevant context from {{name}}'s memory:
+{{context}}
 
 ### Input:
 The {{user}} say "{{question}}". What should {{name}} response?
