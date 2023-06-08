@@ -128,8 +128,8 @@ class TimeWeightedVectorStoreRetrieverModified(BaseRetriever, BaseModel):
         delta_np = np.where(delta_np == 0, 1, delta_np)
         x_norm = (score_array_np-score_array_np.min(axis=0))/delta_np
         # Weight importance score less
-        x_norm[:,0] = x_norm[:,0]*0.15
-        x_norm[:,1] = x_norm[:,1]*0.15
+        x_norm[:,0] = x_norm[:,0]*0.9
+        x_norm[:,1] = x_norm[:,1]*0.9
         x_norm_sum = x_norm.sum(axis=1)
         rescored_docs = [
             (doc, score)

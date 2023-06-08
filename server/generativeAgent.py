@@ -83,8 +83,9 @@ class GenerativeAgent:
         current_time = self.get_current_time()
         need_replan = True
         for task_temp in self.plan:
-            task_to_temp = datetime.strptime(task_temp['to'], '%H:%M')
-            if task_to_temp.time() > current_time.time():
+            # task_to_temp = datetime.strptime(task_temp['to'], '%H:%M')
+            task_to_temp = task_temp['to']
+            if task_to_temp > current_time:
                 self.status = task_temp['task']
                 need_replan = False
                 break
@@ -191,10 +192,22 @@ class GenerativeAgent:
                         current_time=self.get_current_time().strftime('%A %B %d, %Y, %H:%M')
                        )
 
+        current_date = self.get_current_time()
         list_task = result['items']
         list_task.insert(0, {'from': now, 'to': result['to'], 'task': result['task']})
-        self.plan = list_task
-        return list_task
+        list_task_time = []
+        for i, task_temp in enumerate(list_task):
+            t_from = datetime.strptime(task_temp['from'], '%H:%M')
+            t_from = current_date.replace(hour=t_from.hour, minute=t_from.minute)
+            t_to = datetime.strptime(task_temp['to'], '%H:%M')
+            t_to = current_date.replace(hour=t_to.hour, minute=t_to.minute)
+            delta_time = (t_to - t_from)
+            if delta_time.total_seconds() < 0:
+                t_to += timedelta(days=1)
+            list_task_time.append({'from': t_from, 'to': t_to, 'task': task_temp['task']})
+            
+        self.plan = list_task_time
+        return list_task_time
 
     def react(self, observation, observed_entity, entity_status):
         if isinstance(observed_entity, str):
@@ -262,7 +275,19 @@ class GenerativeAgent:
                        )
         list_task = result['items']
         list_task.insert(0, {'from': now, 'to': result['to'], 'task': result['task']})
-        return list_task
+
+        current_date = self.get_current_time()
+        list_task_time = []
+        for i, task_temp in enumerate(list_task):
+            t_from = datetime.strptime(task_temp['from'], '%H:%M')
+            t_from = current_date.replace(hour=t_from.hour, minute=t_from.minute)
+            t_to = datetime.strptime(task_temp['to'], '%H:%M')
+            t_to = current_date.replace(hour=t_to.hour, minute=t_to.minute)
+            delta_time = (t_to - t_from)
+            if delta_time.total_seconds() < 0:
+                t_to += timedelta(days=1)
+            list_task_time.append({'from': t_from, 'to': t_to, 'task': task_temp['task']})
+        return list_task_time
         
     def interview(self, user, question):
         # context = self._get_relevant_context(user, question)

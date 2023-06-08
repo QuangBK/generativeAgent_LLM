@@ -55,7 +55,6 @@ How would one describe {{name}}’s feeling about his recent progress in life gi
 Based on the given statements, {{gen 'res' stop='\\n'}}"""
 
 PROMPT_PLAN = """### Instruction:
-{{summary}}
 
 Example for plan:
 Here is {{name}}'s plan from now at 7:14:
@@ -66,30 +65,43 @@ Here is {{name}}'s plan from now at 7:14:
 [From 22:30 to 7:30]: Go to sleep
 
 ### Input:
-Today is {{current_time}}. Please make a plan today for {{name}} in broad strokes.
+Today is {{current_time}}. Please make a plan today for {{name}} in broad strokes. Given the summary:
+{{summary}}
 
 ### Response:
 Here is {{name}}'s plan from now at {{current_time}}:
-[From {{now}} to {{gen 'to' pattern='[0-9]+:[0-9][0-9]' stop=' ]'}}]: {{gen 'task' temperature=0.95 stop='\\n'}}
-{{#geneach 'items' num_iterations=3}}[From {{gen 'this.from' pattern='[0-9]+:[0-9][0-9]' stop=' '}} to {{gen 'this.to' pattern='[0-9]+:[0-9][0-9]' stop=' ]'}}]: {{gen 'this.task' temperature=0.95 stop='\\n'}}
+[From {{now}} to {{gen 'to' pattern='[0-9]+:[0-9][0-9]' stop=' ]'}}]: {{gen 'task' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='\\n'}}
+{{#geneach 'items' num_iterations=3}}[From {{gen 'this.from' pattern='[0-9]+:[0-9][0-9]' stop=' '}} to {{gen 'this.to' pattern='[0-9]+:[0-9][0-9]' stop=' ]'}}]: {{gen 'this.task' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='\\n'}}
 {{/geneach}}"""
 
 PROMPT_CONTEXT = """### Instruction:
-{{statements}}
+Summarize those statements.
+
+Example:
+Given statements:
+- Gosun has power, but he is struggling to deal with living costs
+- Gosun see Max is sick
+- Gosun has a dog, named Max
+- Bob is in dangerous
+
+Focus on Gosun and Max and statement: "Max is sick".
+
+Summary: Gosun has a dog named Max, who is sick. Gosun has power, but he is struggling to deal with living costs. His friend, Bob, is in dangerous.
 
 ### Input:
+Given statements:
+{{statements}}
+
 Summarize those statements, focus on {{name}} and {{observed_entity}} and statement: "{{entity_status}}".
 
 ### Response:
-Based on the given statements, it can be summarized as follows:
-
-{{gen 'context' max_tokens=300 stop='\\n'}}"""
+Summary: {{gen 'context' max_tokens=300 stop='\\n'}}"""
 
 PROMPT_REACT = """### Instruction:
 {{summary}}
 
 It is {{current_time}}.
-{{name}}'s status:{{status}}
+{{name}}'s status: {{status}}
 Observation: {{observation}}
 
 Summary of relevant context from {{name}}'s memory: {{context}}
@@ -99,31 +111,34 @@ Should {{name}} react to the observation, and if so, what would be an appropriat
 
 ### Response:
 Reaction: {{#select 'reaction'}}Yes{{or}}No{{/select}}.
-Appropriate reaction: {{gen 'result' temperature=0.95 stop='\\n'}}"""
+Appropriate reaction: {{gen 'result' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='\\n'}}"""
 
 PROMPT_REPLAN = """### Instruction:
-{{summary}}
 
-It is {{current_time}} now.
-{{name}}'s status:{{status}}
-Observation: {{observation}}
-Reaction: {{reaction}}
-
-Example for plan:
-Here is {{name}}'s plan from now at 7:14:
-[From 7:14 to 7:45]: Wake up and complete the morining routine
-[From 7:45 to 8:35]: Eat breakfirst
-[From 8:35 to 17:10]: Go to school and study
-[From 17:10 to 22:30]: Play CSGO
+Example for plan for Tim:
+It is Friday June 09, 2023, 20:07 now
+Tim's status: Tim is at home 
+Observation: Tim' mom is sick
+Tim's reaction: Tim should check his mother is okay or not, give her some medicine if needed.
+Here is Tim's plan from now at 20:07:
+[From 20:07 to 20:45]: Check Tim's mother is okay or not, find some medicine
+[From 20:45 to 22:30]: Make some food
 [From 22:30 to 7:30]: Go to sleep
 
 ### Input:
-It is {{current_time}} now. Please make a plan from now for {{name}} in broad strokes given his reaction.
+{{summary}}
+
+It is {{current_time}} now. Please make a plan from now for {{name}} in broad strokes given his/her reaction.
+
+It is {{current_time}} now.
+{{name}}'s status: {{status}}
+Observation: {{observation}}
+{{name}}'s reaction: {{reaction}}
 
 ### Response:
 Here is {{name}}'s plan from now at {{current_time}}:
-[From {{now}} to {{gen 'to' pattern='[0-9]+:[0-9][0-9]' stop=' ]'}}]: {{gen 'task' temperature=0.95 stop='\\n'}}
-{{#geneach 'items' num_iterations=3}}[From {{gen 'this.from' pattern='[0-9]+:[0-9][0-9]' stop=' '}} to {{gen 'this.to' pattern='[0-9]+:[0-9][0-9]' stop=' ]'}}]: {{gen 'this.task' temperature=0.95 stop='\\n'}}
+[From {{now}} to {{gen 'to' pattern='[0-9]+:[0-9][0-9]' stop=' ]'}}]: {{gen 'task' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='\\n'}}
+{{#geneach 'items' num_iterations=3}}[From {{gen 'this.from' pattern='[0-9]+:[0-9][0-9]' stop=' '}} to {{gen 'this.to' pattern='[0-9]+:[0-9][0-9]' stop=' ]'}}]: {{gen 'this.task' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='\\n'}}
 {{/geneach}}"""
 
 PROMPT_DIALOGUE = """### Instruction:
@@ -146,7 +161,7 @@ B: Good luck.
 What would {{name}} say to {{observed_entity}}? Make a short dialogue.
 
 ### Response:
-Here is the short dialogue:{{gen 'dialogue' temperature=0.95 stop=''}}"""
+Here is the short dialogue:{{gen 'dialogue' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop=''}}"""
 
 PROMPT_INTERVIEW = """### Instruction:
 {{summary}}
@@ -161,4 +176,4 @@ Summary of relevant context from {{name}}'s memory:
 The {{user}} say "{{question}}". What should {{name}} response?
 
 ### Response:
-Here is the response from {{name}}: "{{gen 'response' temperature=0.95 stop='"'}}\""""
+Here is the response from {{name}}: "{{gen 'response' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='"'}}\""""

@@ -16,10 +16,16 @@ For more explaination, please check [my medium post](https://medium.com/@gartist
 # How to use
 ### Install
 Python packages:
-- [guidance](https://github.com/microsoft/guidance)
+- [Guidance](https://github.com/microsoft/guidance) (>=0.0.62)
 - [GPTQ-for-LLaMa](https://github.com/oobabooga/GPTQ-for-LLaMa.git)
-- [langchain](https://github.com/hwchase17/langchain)
-- [faiss](https://github.com/facebookresearch/faiss) (For VectorStore, feel free to change to your own VectorStore at [this link](https://python.langchain.com/en/latest/modules/indexes/vectorstores.html))
+- [Langchain](https://github.com/hwchase17/langchain)
+- [Faiss](https://github.com/facebookresearch/faiss) (For VectorStore, feel free to change to your own VectorStore at [this link](https://python.langchain.com/en/latest/modules/indexes/vectorstores.html))
+
+Currently, to use the lastest prompt (for more creative responses), we need the lastest Guidance (0.0.62). To install:
+
+```
+pip install -U git+https://github.com/microsoft/guidance.git@main
+```
 
 The GPTQ-for-LLaMa I used is the oobabooga's fork. You can install it with [this command](https://github.com/oobabooga/text-generation-webui/blob/main/docs/GPTQ-models-(4-bit-mode).md#step-1-install-gptq-for-llama).
 
