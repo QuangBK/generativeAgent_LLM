@@ -21,7 +21,7 @@ Python packages:
 - [Langchain](https://github.com/hwchase17/langchain)
 - [Faiss](https://github.com/facebookresearch/faiss) (For VectorStore, feel free to change to your own VectorStore at [this link](https://python.langchain.com/en/latest/modules/indexes/vectorstores.html))
 
-Currently, to use the lastest prompt (for more creative responses), we need the lastest Guidance (0.0.62). To install:
+Currently, to use the latest prompt (for more creative responses), we need the latest Guidance (0.0.62). To install:
 
 ```
 pip install -U git+https://github.com/microsoft/guidance.git@main
