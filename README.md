@@ -2,6 +2,8 @@
 This is the implementation of paper ["Generative Agents: Interactive Simulacra of Human Behavior"](https://arxiv.org/pdf/2304.03442.pdf). This is based on the [Langchain implementation](https://python.langchain.com/en/latest/use_cases/agent_simulations/characters.html). We improve and add more features to make it like the original paper as much as possible.
 For more explaination, please check [my medium post](https://medium.com/@gartist/implement-generative-agent-with-local-llm-guidance-and-langchain-full-features-fa57655f3de1).
 
+Note that: I just fixed a conflict between current prompts and the guidance. I recommend using the guidance==0.063 because of the stability.
+
 ### Supported Features:
 - [x] Work with local LLM
 - [x] Memory and Retrieval
@@ -16,7 +18,7 @@ For more explaination, please check [my medium post](https://medium.com/@gartist
 # How to use
 ### Install
 Python packages:
-- [Guidance](https://github.com/microsoft/guidance) (>=0.0.62)
+- [Guidance](https://github.com/microsoft/guidance) (>=0.0.63) recommend using 0.0.63
 - [GPTQ-for-LLaMa](https://github.com/oobabooga/GPTQ-for-LLaMa.git)
 - [Langchain](https://github.com/hwchase17/langchain)
 - [Faiss](https://github.com/facebookresearch/faiss) (For VectorStore, feel free to change to your own VectorStore at [this link](https://python.langchain.com/en/latest/modules/indexes/vectorstores.html))

@@ -5,7 +5,7 @@ On the scale of 1 to 10, where 1 is purely mundane (e.g., brushing teeth, making
 Memory: {{mem}}
 
 ### Response:
-Rating: {{gen 'rate' pattern='[0-9]+' stop='\\n'}}"""
+Rating: {{gen 'rate' pattern='[0-9]+' stop='\n'}}"""
 
 PROMPT_SALIENT = """### Instruction:
 {{recent_memories}}
@@ -14,7 +14,7 @@ PROMPT_SALIENT = """### Instruction:
 Given only the information above, what are 3 most salient high-level questions we can answer about the subjects in the statements?
 
 ### Response:
-{{#geneach 'items' num_iterations=3}}{{gen 'this' stop='\\n'}}
+{{#geneach 'items' num_iterations=3}}{{gen 'this' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='\n'}}
 {{/geneach}}"""
 
 PROMPT_INSIGHTS = """### Instruction:
@@ -24,7 +24,7 @@ PROMPT_INSIGHTS = """### Instruction:
 What 3 high-level insights can you infer from the above statements?
 
 ### Response:
-{{#geneach 'items' num_iterations=3}}{{gen 'this' stop='\\n'}}
+{{#geneach 'items' num_iterations=3}}{{gen 'this' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='\n'}}
 {{/geneach}}"""
 
 PROMPT_CHARACTERISTICS = """### Instruction:
@@ -34,7 +34,7 @@ PROMPT_CHARACTERISTICS = """### Instruction:
 How would one describe {{name}}’s core characteristics given the following statements?
 
 ### Response:
-Based on the given statements, {{gen 'res' stop='\\n'}}"""
+Based on the given statements, {{gen 'res' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='\n'}}"""
 
 PROMPT_OCCUPATION = """### Instruction:
 {{statements}}
@@ -43,7 +43,7 @@ PROMPT_OCCUPATION = """### Instruction:
 How would one describe {{name}}’s current daily occupation given the following statements?
 
 ### Response:
-Based on the given statements, {{gen 'res' stop='\\n'}}"""
+Based on the given statements, {{gen 'res' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='\n'}}"""
 
 PROMPT_FEELING = """### Instruction:
 {{statements}}
@@ -52,7 +52,7 @@ PROMPT_FEELING = """### Instruction:
 How would one describe {{name}}’s feeling about his recent progress in life given the following statements?
 
 ### Response:
-Based on the given statements, {{gen 'res' stop='\\n'}}"""
+Based on the given statements, {{gen 'res' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='\n'}}"""
 
 PROMPT_PLAN = """### Instruction:
 
@@ -70,8 +70,8 @@ Today is {{current_time}}. Please make a plan today for {{name}} in broad stroke
 
 ### Response:
 Here is {{name}}'s plan from now at {{current_time}}:
-[From {{now}} to {{gen 'to' pattern='[0-9]+:[0-9][0-9]' stop=' ]'}}]: {{gen 'task' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='\\n'}}
-{{#geneach 'items' num_iterations=3}}[From {{gen 'this.from' pattern='[0-9]+:[0-9][0-9]' stop=' '}} to {{gen 'this.to' pattern='[0-9]+:[0-9][0-9]' stop=' ]'}}]: {{gen 'this.task' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='\\n'}}
+[From {{now}} to {{gen 'to' pattern='[0-9]+:[0-9][0-9]' stop=']'}}]: {{gen 'task' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='\n'}}
+{{#geneach 'items' num_iterations=3}}[From {{gen 'this.from' pattern='[0-9]+:[0-9][0-9]' stop=' '}} to {{gen 'this.to' pattern='[0-9]+:[0-9][0-9]' stop=']'}}]: {{gen 'this.task' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='\n'}}
 {{/geneach}}"""
 
 PROMPT_CONTEXT = """### Instruction:
@@ -95,7 +95,7 @@ Given statements:
 Summarize those statements, focus on {{name}} and {{observed_entity}} and statement: "{{entity_status}}".
 
 ### Response:
-Summary: {{gen 'context' max_tokens=300 stop='\\n'}}"""
+Summary: {{gen 'context' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 max_tokens=300 stop='\n'}}"""
 
 PROMPT_REACT = """### Instruction:
 {{summary}}
@@ -110,8 +110,8 @@ Summary of relevant context from {{name}}'s memory: {{context}}
 Should {{name}} react to the observation, and if so, what would be an appropriate reaction?
 
 ### Response:
-Reaction: {{#select 'reaction'}}Yes{{or}}No{{/select}}.
-Appropriate reaction: {{gen 'result' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='\\n'}}"""
+Reaction: {{select 'reaction' options=valid_opts}}.
+Appropriate reaction: {{gen 'result' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='\n'}}"""
 
 PROMPT_REPLAN = """### Instruction:
 
@@ -137,8 +137,8 @@ Observation: {{observation}}
 
 ### Response:
 Here is {{name}}'s plan from now at {{current_time}}:
-[From {{now}} to {{gen 'to' pattern='[0-9]+:[0-9][0-9]' stop=' ]'}}]: {{gen 'task' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='\\n'}}
-{{#geneach 'items' num_iterations=3}}[From {{gen 'this.from' pattern='[0-9]+:[0-9][0-9]' stop=' '}} to {{gen 'this.to' pattern='[0-9]+:[0-9][0-9]' stop=' ]'}}]: {{gen 'this.task' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='\\n'}}
+[From {{now}} to {{gen 'to' pattern='[0-9]+:[0-9][0-9]' stop=']'}}]: {{gen 'task' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='\n'}}
+{{#geneach 'items' num_iterations=3}}[From {{gen 'this.from' pattern='[0-9]+:[0-9][0-9]' stop=' '}} to {{gen 'this.to' pattern='[0-9]+:[0-9][0-9]' stop=']'}}]: {{gen 'this.task' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop='\n'}}
 {{/geneach}}"""
 
 PROMPT_DIALOGUE = """### Instruction:
@@ -161,12 +161,12 @@ B: Good luck.
 What would {{name}} say to {{observed_entity}}? Make a short dialogue.
 
 ### Response:
-Here is the short dialogue:{{gen 'dialogue' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99 stop=''}}"""
+Here is the short dialogue:{{gen 'dialogue' top_k=30 top_p=0.18 repetition_penalty=1.15 temperature=1.99}}"""
 
 PROMPT_INTERVIEW = """### Instruction:
 {{summary}}
 
-It is {{current_time}}.
+It is {{current_time}} now.
 {{name}}'s status:{{status}}
 
 Summary of relevant context from {{name}}'s memory:

@@ -49,6 +49,7 @@ class GenerativeAgent:
         self.name = name
         self.age = str(age)
         self.des = des.split(';')
+        self.trails = trails
         self.summary = trails
         self.plan = []
         self.status = None        
@@ -66,6 +67,7 @@ class GenerativeAgent:
         self.reflecting = False
         self.reflection_threshold = 25
         self.dialogue_list = []
+        self.relevant_memories = ''
         self.silent = False
 
         self.add_memories(self.des)
@@ -79,6 +81,10 @@ class GenerativeAgent:
         else:
             return datetime.now()
 
+    def next_task(self,):
+        self.set_current_time(self.status['to'])
+        return self.update_status()
+
     def update_status(self,):
         current_time = self.get_current_time()
         need_replan = True
@@ -86,12 +92,12 @@ class GenerativeAgent:
             # task_to_temp = datetime.strptime(task_temp['to'], '%H:%M')
             task_to_temp = task_temp['to']
             if task_to_temp > current_time:
-                self.status = task_temp['task']
+                self.status = task_temp
                 need_replan = False
                 break
         if need_replan:
             new_plan = self.make_plan()
-            self.status = new_plan[0]['task']
+            self.status = new_plan[0]
         return self.status
         
     def add_memories(self, list_mem):
@@ -108,6 +114,8 @@ class GenerativeAgent:
             importance_score_temp = int(result['rate'])
             self.retriever.add_documents([Document(page_content=mem_des, metadata={"importance": importance_score_temp, "created_at": mem_time})], current_time=mem_time)
             self.aggregate_importance += int(result['rate'])
+
+            
 
         if not self.reflecting and self.aggregate_importance > self.reflection_threshold:
             self.reflecting = True
@@ -155,7 +163,7 @@ class GenerativeAgent:
             feeling = self._run_feeling()
 
             description = core_characteristics + '. ' + daily_occupation + '. ' + feeling            
-            self.summary = (f"Name: {self.name} (age: {self.age})" + f"\nSummary: {description}")
+            self.summary = (f"Name: {self.name} (age: {self.age})" + f"\nTrails: {self.trails}" + f"\nSummary: {description}")
             self.last_refreshed = current_time            
         return self.summary
         
@@ -210,6 +218,7 @@ class GenerativeAgent:
         return list_task_time
 
     def react(self, observation, observed_entity, entity_status):
+        self.add_memories([observation])
         if isinstance(observed_entity, str):
             name_observed_entity = observed_entity
         else:
@@ -228,7 +237,7 @@ class GenerativeAgent:
         prompt = self.guidance(PROMPT_DIALOGUE, silent=self.silent)
         result = prompt(summary=self.summary,
                         name=self.name,
-                        status=self.status,
+                        status=self.status['task'],
                         observation=observation,
                         reaction=reaction,
                         observed_entity=name_observed_entity,
@@ -244,7 +253,7 @@ class GenerativeAgent:
         
         docs = merge_docs(docs1, docs2)
         statements = get_text_from_docs(docs, include_time = False)
-        
+        self.relevant_memories = statements
         prompt = self.guidance(PROMPT_CONTEXT, silent=self.silent)
         result = prompt(statements=statements, name=self.name, observed_entity=observed_entity, entity_status=entity_status)
         return result['context']
@@ -254,11 +263,12 @@ class GenerativeAgent:
         prompt = self.guidance(PROMPT_REACT, silent=self.silent)
         result = prompt(summary=self.summary,
                         name=self.name,
-                        status=self.status,
+                        status=self.status['task'],
                         observation=observation,
                         observed_entity=observed_entity,
                         context=context,
-                        current_time=self.get_current_time().strftime('%A %B %d, %Y, %H:%M')
+                        current_time=self.get_current_time().strftime('%A %B %d, %Y, %H:%M'),
+                        valid_opts=['Yes', 'No']
                        )
         return result['reaction'], result['result'], context
 
@@ -267,7 +277,7 @@ class GenerativeAgent:
         prompt = self.guidance(PROMPT_REPLAN, silent=self.silent)
         result = prompt(summary=self.summary,
                         name=self.name,
-                        status=self.status,
+                        status=self.status['task'],
                         observation=observation,
                         reaction=reaction,
                         now=now,
@@ -293,11 +303,12 @@ class GenerativeAgent:
         # context = self._get_relevant_context(user, question)
         docs = self.retriever.get_relevant_documents(question, self.get_current_time())      
         context = get_text_from_docs(docs, include_time = False)
+        self.relevant_memories = context
         
         prompt = self.guidance(PROMPT_INTERVIEW, silent=self.silent)
         result = prompt(summary=self.summary,
                         name=self.name,
-                        status=self.status,
+                        status=self.status['task'],
                         user=user,
                         context=context,
                         question=question,
