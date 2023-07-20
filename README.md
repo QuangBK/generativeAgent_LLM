@@ -18,16 +18,10 @@ Note that: I just fixed a conflict between current prompts and the guidance. I r
 # How to use
 ### Install
 Python packages:
-- [Guidance](https://github.com/microsoft/guidance) (>=0.0.63) recommend using 0.0.63
+- [Guidance](https://github.com/microsoft/guidance) `pip install guidance==0.0.63`
 - [GPTQ-for-LLaMa](https://github.com/oobabooga/GPTQ-for-LLaMa.git)
-- [Langchain](https://github.com/hwchase17/langchain)
+- [Langchain](https://github.com/hwchase17/langchain) `pip install langchain==0.0.190`
 - [Faiss](https://github.com/facebookresearch/faiss) (For VectorStore, feel free to change to your own VectorStore at [this link](https://python.langchain.com/en/latest/modules/indexes/vectorstores.html))
-
-Currently, to use the latest prompt (for more creative responses), we need the latest Guidance (0.0.62). To install:
-
-```
-pip install -U git+https://github.com/microsoft/guidance.git@main
-```
 
 The GPTQ-for-LLaMa I used is the oobabooga's fork. You can install it with [this command](https://github.com/oobabooga/text-generation-webui/blob/main/docs/GPTQ-models-(4-bit-mode).md#step-1-install-gptq-for-llama).
 
