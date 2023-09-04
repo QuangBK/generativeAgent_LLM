@@ -113,4 +113,4 @@ I live with a friend of mine, his name is Bob.
 
 # License
 
-MIT
+Creative Commons Attribution-NonCommercial (CC BY-NC-4.0) 
